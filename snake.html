@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Snake-CanvasGamer</title>
+	<style type="text/css">
+		#loading{
+			/* border:solid 1px black;	*/
+			display: block;
+			margin: auto;
+			position: absolute;
+			left: 350px;
+			top: 380px;
+			width:140px;
+			height: 100px;
+		}
+
+	</style>
+</head>
+<body>
+
+<!-- GitHub Fork -->
+<a href="https://github.com/nanorocks"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+<canvas id="mycan" width="800" height="400" style="border: solid 2px black; display: block; margin-top:100px;">Can't load old browser</canvas>
+<div id="test"></div>
+<p><strong>** If the game doesn't load well, <u>RELOAD</u> the page !!!</strong></p>
+<!-- Animated Image CanvasGamer -->
+<img src="img-main-logo/logo.png" alt="logo" id="logo" style="display: none;">
+<img src="img-main-logo/ld.gif" alt="loading" id="loading">
+
+<!-- Image For Main Img -->
+<img src="img-logo-game/snake_bg.jpg" alt="snake_menu_bg" id="snake_menu_bg" style="display: none;">
+<img src="img-logo-game/snake_title.jpg" alt="snake_menu_title" id="snake_menu_title" style="display: none;">
+<img src="img-logo-game/snake.png" alt="snake" id="snake" style="display: none;">
+<img src="img-logo-game/snake_rev.png" alt="snake_rev" id="snake_rev" style="display: none;">
+
+<!-- Image For Option Img -->
+<img src="img-menu/options_img.png" alt="options_logo" id="options_logo" style="display: none;">
+
+<!-- Image For Credits Img -->
+<img src="img-menu/credits_img.png" alt="credits_logo" id="credits_logo" style="display: none;">
+
+<!-- Images For Menu -->
+<img src="img-menu/start.png" alt="start" id="start" style="display: none;">
+<img src="img-menu/options.png" alt="options" id="options" style="display: none;">
+<img src="img-menu/credits.png" alt="credits" id="credits" style="display: none;">
+<img src="img-menu/back.png" alt="back" id="back" style="display: none;">
+
+<img src="img-menu/start_hover.png" alt="start_hover" id="start_hover" style="display: none;">
+<img src="img-menu/options_hover.png" alt="options_hover" id="options_hover" style="display: none;">
+<img src="img-menu/credits_hover.png" alt="credits_hover" id="credits_hover" style="display: none;">
+<img src="img-menu/back_hover.png" alt="back_hover" id="back_hover" style="display: none;">
+
+<!-- Images For Sound -->
+<img src="img-sound/sound_on.png" alt="sound_on" id="sound_on" style="display: none;">
+<img src="img-sound/sound_off.png" alt="sound_off" id="sound_off" style="display: none;">
+
+<audio controls loop id="sound_menu" style="display: none;">
+ <source src="sound/snake.ogg" type="audio/ogg">
+  <source src="sound/snake.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+
+<audio id="sound_game_food" style="display: none;">
+ <source src="sound/all_food.ogg" type="audio/ogg">
+  <source src="sound/all_food.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+
+<audio id="sound_game_super_food_show" style="display: none;">
+ <source src="sound/super_food_show.ogg" type="audio/ogg">
+  <source src="sound/super_food_show.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+
+<script type="text/javascript">
+	// DO NOT TUCH 
+	var canvas = document.getElementById("mycan");
+	var con = canvas.getContext("2d");
+	var sleep = 3000;
+	var sound_menu = document.getElementById("sound_menu");
+
+	var sound_game_food = document.getElementById("sound_game_food");
+	var sound_game_super_food_show = document.getElementById("sound_game_super_food_show");
+
+
+	var w = canvas.width;
+	var h = canvas.height;
+
+	// Title menu flowting 
+	var title_menu_top = 10;
+	var title_menu_top_speed = 2;
+
+	// For intervals
+	var menu_interval;
+
+
+	// Fixed positions on menu images
+	var img_menu_left= w*0.38;
+	var img_menu_top1 = 220;
+	var img_menu_top2 = 275;
+	var img_menu_top3 = 330;
+
+	// Fixed positions on menu sound
+	var img_sound_left = 735;
+	var img_sound_top = 350;
+	var sound_menu_on = "sound_on";
+	var sound_menu_off = "sound_off";
+	var sound_status = sound_menu_on;
+
+	// Fixed position on back button for MouseEvent
+	var img_back_button_left = 580;
+	var img_back_button_top = 340;
+
+	// For Menu Button Play Position for MouseEvent for menu
+	var play_cor_x_begin = 320;
+	var play_cor_y_begin = 320; 
+	var play_cor_x_end = 515;
+	var play_cor_y_end = 370;
+
+	// For Menu Button Options Position for MouseEvent for menu
+	var options_cor_x_begin = 320;
+	var options_cor_y_begin = 378;
+	var options_cor_x_end = 517;
+	var options_cor_y_end = 420;
+
+	// For Menu Button Credits Position for MouseEvent for menu
+	var credits_cor_x_begin = 320;
+	var credits_cor_y_begin = 435;
+	var credits_cor_x_end = 519;
+	var credits_cor_y_end = 470;
+
+	// For Button Back Position for MouseEvent
+	var back_cor_x_begin = 601;
+	var back_cor_y_begin = 443;
+	var back_cor_x_end = 795;
+	var back_cor_y_end = 489;
+
+	// For Button Back Position 
+	var sound_cor_x_begin = 740;
+	var sound_cor_y_begin = 456;
+	var sound_cor_x_end = 1075;
+	var sound_cor_y_end = 740;
+
+	// Base Menu Positions Block
+	var block_left_X = 320;
+	var block_left_Y = 320;
+	var block_top_X = 515;
+	var block_top_Y = 370;
+
+
+	window.onload = function()
+	{
+		setTimeout(function(){ 
+				menu_base();
+				sound_menu.play();
+    	}, sleep);  
+		
+    	// here goes the animated logo
+    	logo("logo",0,0);
+	}
+
+	function menu_base()
+	{
+				
+				clearInterval(menu_interval);
+			    document.getElementById("loading").style.display='none';
+			    canvas.addEventListener("mousemove", animate_menu, false);
+				canvas.addEventListener("mousedown", mouseClick, false);
+        	    // Making the menu
+        	    menu_interval = setInterval(make_menu, 200);
+        		
+	}
+
+	function mouseClickButtonBack(event)
+	{
+ 		var mouseX = event.clientX;
+		var mouseY = event.clientY;
+
+		// Button Back is clicked
+		if(mouseX > back_cor_x_begin && mouseY > back_cor_y_begin && mouseX < back_cor_x_end && mouseY < back_cor_y_end)
+	    {
+	    	// Start sound for Menu from start
+	    	//sound_menu.currentTime = 0;
+
+	    	// Remove Events For Button Back
+			canvas.removeEventListener("mousemove", animate_menu_button_back,false);
+			canvas.removeEventListener("mousedown", mouseClickButtonBack, false);
+
+			// Adding the menu
+        	make_menu();
+			canvas.addEventListener("mousemove", animate_menu, false);
+			canvas.addEventListener("mousedown", mouseClick, false);
+	    }
+		
+	}
+	function soundSet()
+	{
+		if(sound_status.includes(sound_menu_off))
+    	{
+    		sound_status = sound_menu_on;
+    		sound_menu.play();
+    		make_menu();
+    	}
+    	else
+    	{
+    		sound_status = sound_menu_off;
+    		sound_menu.pause();
+			//sound_menu.currentTime = 0;
+    		make_menu();
+    	}
+	}
+	function mouseClick(event)
+	{
+
+	    var mouseX = event.clientX;
+		var mouseY = event.clientY;
+  		//	var coords = "X coords: " + x + ", Y coords: " + y;
+    	//  alert(mouseX+" "+mouseY);
+
+    	// For Click of Sound Button On/Off
+        if(mouseX > sound_cor_x_begin && mouseY > sound_cor_y_begin && mouseX < sound_cor_x_end && mouseY < sound_cor_y_end)
+        {
+        	soundSet();
+        }
+
+		// For Start Mouse Click
+		if(mouseX > play_cor_x_begin && mouseY > play_cor_y_begin && mouseX < play_cor_x_end && mouseY < play_cor_y_end)
+	    {
+			alert("Let's START.");
+			canvas.removeEventListener("mousemove", animate_menu,false);
+			canvas.removeEventListener("mousedown", mouseClick,false);
+			sound_status = sound_menu_off;
+    		sound_menu.pause();
+
+			init();
+	    }
+
+	    // For Options Mouse Click
+	    if(mouseX > options_cor_x_begin && mouseY > options_cor_y_begin && mouseX < options_cor_x_end && mouseY < options_cor_y_end)
+	    {
+
+	    	background_game("#fff");
+
+			//alert("OPTIONS CLICK");	
+			canvas.removeEventListener("mousemove", animate_menu,false);
+			canvas.removeEventListener("mousedown", mouseClick,false);
+
+			// Display Options Img
+			logo("options_logo",0,0);
+			
+			//Display Button Back
+			logo("back",img_back_button_left,img_back_button_top);
+
+			//Animate Button Back
+			canvas.addEventListener("mousemove", animate_menu_button_back,false);
+			canvas.addEventListener("mousedown", mouseClickButtonBack, false);
+
+	    }
+
+	    // For Credits Mouse Click
+	    if(mouseX > credits_cor_x_begin && mouseY > credits_cor_y_begin && mouseX < credits_cor_x_end && mouseY < credits_cor_y_end)
+	    {
+
+			//alert("CREDITS CLICK");	
+			canvas.removeEventListener("mousemove", animate_menu,false);
+			canvas.removeEventListener("mousedown", mouseClick,false);
+
+			// Display Credits img
+			logo("credits_logo",0,0);
+
+			//Display Button Back
+			logo("back",img_back_button_left,img_back_button_top);
+
+			//Animate Button Back
+			canvas.addEventListener("mousemove", animate_menu_button_back,false);
+			canvas.addEventListener("mousedown", mouseClickButtonBack, false);
+	    }
+
+	}
+
+
+	function animate_menu_button_back(e)
+	{
+		var tmp_obj = mouseMove(e);
+		var mouseX = tmp_obj.x;
+		var mouseY = tmp_obj.y;
+
+		//Button on Hover
+		if(mouseX > 601 && mouseY > 443 && mouseX < 795 && mouseY < 489)
+	    {
+			logo("back_hover",img_back_button_left,img_back_button_top);			
+	    }else{
+
+	    	logo("back",img_back_button_left,img_back_button_top);
+	    }
+	}
+
+	function animate_menu(e)
+	{
+
+		var tmp_obj = mouseMove(e);
+		var mouseX = tmp_obj.x;
+		var mouseY = tmp_obj.y;
+
+
+		// For Start Hover
+		if(mouseX > block_left_X && mouseY > block_left_Y && mouseX < block_top_X && mouseY < block_top_Y)
+	    {
+	    	clearInterval(menu_interval);
+			logo("start_hover",img_menu_left,img_menu_top1);			
+	    }else{
+	    	logo("start",img_menu_left,img_menu_top1);
+	    	menu_base();
+	    }
+		
+		// For Options Hover
+	    if(mouseX > block_left_X && mouseY > block_left_Y+57 && mouseX < block_top_X+2 && mouseY < block_top_Y+50)
+	    {
+	    	clearInterval(menu_interval);
+			logo("options_hover",img_menu_left,img_menu_top2);
+	    }else{
+			logo("options",img_menu_left,img_menu_top2);
+	    }
+
+	    // For Credits Hover
+	    if(mouseX > block_left_X && mouseY > block_left_Y+114 && mouseX < block_top_X+4 && mouseY < block_top_Y+100)
+	    {
+	    	clearInterval(menu_interval);
+			logo("credits_hover",img_menu_left,img_menu_top3);
+	    }else{
+			logo("credits",img_menu_left,img_menu_top3);
+
+	    }
+
+	   
+	}
+	
+  
+	function mouseMove(event)
+	{
+	    var mouseX,mouseY;
+
+	    // Stops browser to do what it normally does    
+	    event.preventDefault();  
+        event.stopPropagation();
+
+	    // determine where mouse is
+	    mouseX = event.pageX;
+	    mouseY = event.pageY;
+	 
+
+	    var obj = {
+	    	x: mouseX,
+	    	y: mouseY
+	    };
+	  	return obj;
+	}
+	function animated_title_menu(top)
+	{
+		//animated bg here
+		logo("snake_menu_title",30,top);
+	}
+	function make_menu()
+	{
+		logo("snake_menu_bg",0,0);
+		logo("snake",20,180);
+		logo("snake_rev",290,165);
+		
+
+		title_menu_top += title_menu_top_speed;
+		if(title_menu_top <= 10)
+		{
+			title_menu_top_speed = title_menu_top_speed*(-1);
+		}
+		else if(title_menu_top >= 24)
+		{
+			title_menu_top_speed = -title_menu_top_speed;
+		}
+		animated_title_menu(title_menu_top);
+		
+
+
+		menu_items(img_menu_left,img_menu_top1,img_menu_top2,img_menu_top3,img_sound_left,img_sound_top,sound_status);	
+	}
+	function menu_items(left,top1,top2,top3,sound_left,sound_top,sound_status)
+	{
+		logo("start",left,top1);
+		logo("options",left,top2);
+		logo("credits",left,top3);
+		logo(sound_status,sound_left,sound_top);
+	}
+	function logo(id,left,top)
+	{
+   	 	var img=document.getElementById(id);
+    	con.drawImage(img,left,top);
+	}
+
+	// PUT THE CODE FOR THE GAME BUTTON BELLOW
+
+   
+    var cw = 20; //length of each snake, food and super food cell.
+    var d; // Snake direction, hold's string.
+    var food; // Snake food, it's an object.
+	var super_food; // Snake super food, it's an object.
+    var score; // Score hold's integer.
+    var super_food_interval= 0; // Rate at which the super food spawns, its 0 on start, 10 after initialization.
+	var super_food_timer=6; // How long will the super food stay on the screen, 6 on start but 5 after initialization.
+	var normal_food_picked_up = 0; // How many food have you picked up, it's used to increase the game speed as you collect more and more.
+	var super_food_timer_display; // Show the super food timer on the screen.
+	var speed=120; //Game speed on start.
+    var super_food_timer_interval_starter; // Used to stop the super food timer.
+    var snake_array; //The snake array, hold's the size of the snake.
+	var paused=0; //Check if game is paused,0 is unpaused, 1 is paused.
+	
+   
+    function init() // Initialization funcion
+    {
+		super_food_timer=6; // reset the super food timer to 6 after you crashed your snake in the wall.
+        d = "right"; // Starting direction of the snake.
+        create_snake(); // Draw the snake.
+        create_food(); // Draw the food.
+		create_food_super(); // Draw the super food.
+        score = 0; // Set the score to 0.
+        speed=120; // Starting speed.
+
+      
+
+        set_speed(speed); // Sets the game speed and updates the canvas.
+       
+       
+    }
+   
+   
+    function create_snake() // Create the snake.
+    {
+        var length = 5; // Starting lenght of the snake.
+        snake_array = []; // Initialization of the snake array.
+        for(var i = length-1; i>=0; i--)
+        {
+            // fill the array with cell's.
+            snake_array.push({x: i, y:5}); // push add's element to the end of the list.
+        }
+    }
+   
+    
+    function create_food() //Crate food funcion.
+    {
+        food = //Food is an object.
+        {
+            xq: Math.round(Math.random()*(w-cw)/cw), // Spawn the food on random x.
+            ye: Math.round(Math.random()*((h-40)-cw)/cw), // Spawn the food on random y.
+			// Cw is the lenght of each cell, we subtract it so the food does not spawn outside or on the edge of the canvas.
+        };
+		if(check_collision(food.xq, food.ye, snake_array)) // check if the spawned food is overlapping the snake.
+		{
+		  create_food(); // If it is overlapping the snake, recreate the food again with difrent random values.
+		}
+    }
+	
+	 function create_food_super() // Create super food funcion
+    {
+	if(paused==0) // Check if game is paused, 0 is unpaused.
+	{
+	if(super_food_interval==10) // Only spawn the food after 10 normal food collections.
+	{
+        super_food = // super food is an object
+        {
+            xx: Math.round(Math.random()*(w-cw)/cw), // Spawn the super food on random x.
+            yy: Math.round(Math.random()*((h-40)-cw)/cw), // Spawn the super food on random y.
+			// Cw is the lenght of each cell, we subtract it so the super food does not spawn outside or on the edge of the canvas.
+        };
+        
+		if(check_collision(super_food.xx, super_food.yy, snake_array)) // check if the spawned super food is overlapping the snake.
+		{
+		  create_food_super(); // If it is overlapping the snake, recreate the super food again with difrent random values.
+		}
+		super_food_interval=0; // Reset the interval to 0, so you will have to collect another 10 food for the next super food spawn.
+		
+		super_food_timer--; // Reduce the timer by 1, this is used so the super food timer is correcly to 5 sec duration.
+		super_food_timer_interval_starter = setInterval(super_food_string_timer, 1000); // start the super food duration timer.
+    }
+	else // If super food interval is not 10, spawn the super food outside the canvas.
+	{
+	   super_food =
+        {
+            xx: -5, // spawn super food outside canvas.
+            yy: -5, // spawn super food outside canvas.
+        };
+		// This method is more efficient than painting the canvas again, because elements outside the canvas dont get rendered at all.
+	}
+	}
+    }
+	
+    
+	function set_speed(speed) // Set the speed of the snake.
+	{
+	
+	    if(typeof game_loop != "undefined") clearInterval(game_loop);
+        game_loop = setInterval(paint, speed); // This recalls the funcion pain every 120 ms on start, gets faster as game progresses.
+	}
+	
+	function super_food_string_timer()// Starts the super food interval timer, does not draw it on the screen yet tho.
+	{
+	if(paused ==0) // Check if the game is paused, 0 is unpaused.
+	{
+      	if(super_food_timer>0) // if the timer is more then 0 seconds, reduce it by 1.
+		{
+		  super_food_timer--;
+		}
+		else if(super_food_timer<=0 || super_food_timer == -1) // if the timer is 0, hide the food,set the timer back to 6, and clear the interval.
+		{
+		super_food =
+        {
+            xx: -5, // spawn super food outside canvas.
+            yy: -5, // spawn super food outside canvas.
+			// The second check paramer is used, when you crash in the wall, if you do it will reset the timer and stop the interval.
+        };
+		
+		  clearInterval(super_food_timer_interval_starter); // Clear interval.
+		  super_food_timer=6; // Set the timer back to 6.
+		}
+	}
+	}
+	
+	function background_game(color) // Draws the canvas background.
+	{
+        con.fillStyle = color; // Set the color to gray.
+        con.fillRect(0, 0, w, h);  // Draw the whole canvas gray.
+        con.strokeStyle = "black"; // Set color to black.
+        con.strokeRect( 0 , 0 , w, h); // Draw the edges of the canvas black.
+		con.strokeRect( 0 , 0 , w, 360); // Draw the buttom border of the canvas.
+	}
+	
+	function speed_the_snake() // Speed up the snake.
+	{
+	 if(normal_food_picked_up == 15) // If the player collected 15 normal food speed up the game by 10 ms.
+	 {
+	    speed=speed-10; // Speed up the interval by 10 ms.
+        normal_food_picked_up=0; // Reset the check variable.
+        set_speed(speed); // Call the set speed funcion with the speed variable as parametar.
+	 }
+	
+	}
+	
+	function draw_super_food_timer() // Draw the super food timer on the canvas.
+	{
+	   if(super_food_timer==6 || super_food_timer == -1) // If the timer is not started, keep the text outside of the canvas.
+		{
+		 super_food_timer_display = "Super Food: " + super_food_timer; // Set the text for the timer.
+		 con.fillText(super_food_timer_display, -150, h-10); // Put the timer outside of the canvas.
+		}
+		else if(super_food_timer<6) // When the timer starts.
+		{
+		//  sound_game_super_food_show.play();
+
+		  super_food_timer_display = "Super Food: " + super_food_timer; // Set the text for the timer.
+		  con.fillText(super_food_timer_display, 120, h-10); // put the timer on the canvas.
+		}
+	
+	}
+	
+	function pause() // The pause funcion.
+	{
+	  if(paused == 0) // Check if the game is already paused,0 means game is unpaused.
+	  {
+	   paused=1; // Set the paused value to 1, which means game is paused.
+	   clearInterval(game_loop); // Clear the interval so the snake will stop moving.
+	  }
+	  else // If the game is already paused, start the game.
+	  {
+	    paused=0; // Set paused value to 0, 0 means unpaused.
+	    game_loop = setInterval(paint, speed); // Restart the interval.
+	  }
+	}
+	
+	
+    function paint() // The main drawing funcion.
+    {
+	    //document.getElementById("test").innerHTML = super_food_timer;     Used for testing only.
+	
+		speed_the_snake(); // Call the speed up funcion, speed up if all conditions are met.
+		background_game("#ddd"); // Call the draw background funcion.
+       
+        var nx = snake_array[0].x; // Store the x position of the first cell in the snake array.
+        var ny = snake_array[0].y; // Store the y position of the first cell in the snake array.
+        
+        if(d == "right") nx++; // If d is right, move the snake right.
+        else if(d == "left") nx--; // If d is left, move the snake left.
+        else if(d == "up") ny--; // If d is up, move the snake up.
+        else if(d == "down") ny++; // If d is down, move the snake down.
+       
+       
+        
+        //Check for colision, if there is colision restart the game.
+        if(nx == -1 || nx == w/cw || ny == -1 || ny == (h-40)/cw  || check_collision(nx, ny, snake_array))
+        {
+		    clearInterval(super_food_timer_interval_starter); // Clear the interval of the super food.
+            super_food_interval=0; // Reset super food interval to 0, before you restart the game.
+			super_food_timer=-1; // Set the super food timer to -1, if its already started.
+			draw_super_food_timer(); // Redraw the super super timer off the screen.
+            init(); // Call init again to restart the game.
+          
+            return;
+        }
+       
+        if(nx == food.xq && ny == food.ye || snake_array[1].x == food.xq && snake_array[1].y == food.ye) // Check if the snake is touching the food.
+        {
+        	sound_game_food.play();
+
+            var tail = {x: nx, y: ny}; // Grow the snake.
+            score++; // Increment the score.
+			super_food_interval++; // Increment the super food interval.
+			normal_food_picked_up++; // Increment the speed up variable, speeds up the game at 15.
+            
+            create_food(); // Create new food.
+			if(super_food_interval==10) // Spawn the super food.
+			{
+			create_food_super(); // Call the create food function.
+			}
+			
+        }
+        else
+        {
+            var tail = snake_array.pop();
+            tail.x = nx; tail.y = ny;
+        }
+		if(nx == super_food.xx && ny == super_food.yy || snake_array[1].x == super_food.xx && snake_array[1].x == super_food.yy) // Check if the snake is touching the super  food.
+        {
+
+        	sound_game_food.play();
+
+            var tail = {x: nx, y: ny}; // Grow the snake.
+            score=score+5; // Increment the score.
+		    clearInterval(super_food_timer_interval_starter); // Clear the interval if its already started by some reason.
+			super_food_timer=6; // Set the duration timer to 6.
+			create_food_super(); // Call the funcion again to start the duration timer.
+        }
+		
+   
+       
+        snake_array.unshift(tail); 
+       
+        for(var i = 0; i < snake_array.length; i++)
+        {
+            var c = snake_array[i]; // Used to paint the cell's of the snake.
+            paint_cell(c.x, c.y); // Call the paint cell funcion.
+        }
+       
+		paint_cell_super(super_food.xx,super_food.yy); // Call the paint super food funcion.
+        paint_cella(food.xq, food.ye); // Call the paint normal food funcion.
+       
+        con.font = "20px Arial"; // Set the font style.
+        var score_text = "Score: " + score; // Set the score text.
+        con.fillText(score_text, 15, h-10); // Paint the score on the canvas.
+		
+		con.fillText("Press 'P' to pause/unpause the game! ", 440, h-10);
+		draw_super_food_timer(); // Call the super food timer timer.
+    }
+   
+  
+    function paint_cell(x, y) // Paint the snake cell funcion.
+    {
+        con.fillStyle = "green"; //Set the color to green.
+        con.fillRect(x*cw, y*cw, cw, cw); // Paint the cells green.
+        con.strokeStyle = "#03170B";// Set color to gray.
+        con.strokeRect(x*cw, y*cw, cw, cw); // Draw the border of the cells.
+    }
+    function paint_cella(x, y) // Paint the food.
+    {
+        con.fillStyle = "blue";
+        con.fillRect(x*cw, y*cw, cw, cw);
+        con.strokeStyle = "black";
+        con.strokeRect(x*cw, y*cw, cw, cw);
+    }
+	function paint_cell_super(x, y) // Paint the super food.
+    {
+        con.fillStyle = "red";
+        con.fillRect(x*cw, y*cw, cw, cw);
+        con.strokeStyle = "black";
+        con.strokeRect(x*cw, y*cw, cw, cw);
+    }
+   
+    function check_collision(x, y, array) //Check snake colision with it's self.
+    {
+        for(var i = 0; i < array.length; i++)
+        {
+            if(array[i].x == x && array[i].y == y)
+             return true;
+        }
+        return false;
+    }
+	document.addEventListener("keydown",function(e){
+		var key = e.which; // Store the key presed value.
+        if((key == "37" || key == "65") && d != "right") d = "left"; 
+        else if((key == "38" || key == "87") && d != "down") d = "up";
+        else if((key == "39" || key == "68")&& d != "left") d = "right";
+        else if((key == "40" || key == "83") && d != "up") d = "down";
+		
+		if(key =="80")
+		{
+		   pause();
+		   
+		}
+	});
+</script>
+</body>
+</html>
