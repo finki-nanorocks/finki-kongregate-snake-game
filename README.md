@@ -17,3 +17,6 @@ CanvasGamer is small game development studio. Our goal is to provide entertainme
 ### Authors:
 * Andrej Nankov [@nanorocks] (https://github.com/nanorocks)
 * Aleksandar Babic [@Babic22] (https://github.com/Babic22)
+
+### References:
+[CanvasGamerFB](https://www.facebook.com/CanvasGamer-464917660506590/)
