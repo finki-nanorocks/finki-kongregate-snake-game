@@ -10,3 +10,6 @@ CanvasGamer is small game development studio. Our goal is to provide entertainme
 + HTML5
 + JS
 + CSS3
+
+### Gameplay:
+![alt text](https://github.com/nanorocks/snake-CanvasGamer/blob/master/Selection_001.png?raw=true)
