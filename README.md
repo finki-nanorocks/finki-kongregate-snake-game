@@ -1,7 +1,4 @@
-## Snake game by CanvasGamer
-
-### About
-CanvasGamer is small game development studio. Our goal is to provide entertainment for the people, and help the future game developers by providing our source code from our games.
+## kongregate-snake-game
 
 ### Founding date
 20/4/2017
@@ -17,6 +14,3 @@ CanvasGamer is small game development studio. Our goal is to provide entertainme
 ### Authors:
 * Andrej Nankov [@nanorocks] (https://github.com/nanorocks)
 * Aleksandar Babic [@Babic22] (https://github.com/babicaras)
-
-### References:
-[CanvasGamerFB](https://www.facebook.com/CanvasGamer-464917660506590/)
